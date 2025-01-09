@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        TransactionSystem system = new TransactionSystem();
+        TransactionSystem bankingSystem = new TransactionSystem();
         List<Thread> threads = new ArrayList<>();
 
         //Define bank accounts.
@@ -15,9 +15,10 @@ public class Main {
         BankAccount account3 = new BankAccount(3,new BigDecimal(50000));
 
         //Simulating transactions between accounts
-        Thread thread1 = new Thread(() -> system.transfer(account1, account2, new BigDecimal(200)));
-        Thread thread2 = new Thread(() -> system.transfer(account2,account3,new BigDecimal(500)));
-        Thread thread3 = new Thread(() -> system.transfer(account3,account1, new BigDecimal(20000)));
+        Thread thread0 = new Thread(() -> bankingSystem.transfer(account1, account2, new BigDecimal(200)));
+        Thread thread1 = new Thread(() -> bankingSystem.transfer(account2,account3,new BigDecimal(500)));
+        Thread thread2 = new Thread(() -> bankingSystem.transfer(account3,account1, new BigDecimal(20000)));
+        Thread thread3 = new Thread(() -> bankingSystem.transfer(account3,account2, new BigDecimal(10)));
         Thread thread4 = new Thread(() -> {
             try {
                 Thread.sleep(100);
@@ -30,12 +31,13 @@ public class Main {
             }
         });
         //testing rollbacks
-        Thread thread5 = new Thread(() -> system.transfer(account1,account2, new BigDecimal(20000)));
-        Thread thread6 = new Thread(() -> system.transfer(account3,account2, new BigDecimal(200000)));
+        Thread thread5 = new Thread(() -> bankingSystem.transfer(account1,account2, new BigDecimal(2000000)));
+        Thread thread6 = new Thread(() -> bankingSystem.transfer(account3,account2, new BigDecimal(200000)));
         //testing deadlock and rollback handling
-        Thread thread7 = new Thread(() -> system.transfer(account1,account2, new BigDecimal(200)));
-        Thread thread8 = new Thread(() -> system.transfer(account2,account1, new BigDecimal(2000)));
+        Thread thread7 = new Thread(() -> bankingSystem.transfer(account1,account2, new BigDecimal(200)));
+        Thread thread8 = new Thread(() -> bankingSystem.transfer(account2,account1, new BigDecimal(2000)));
 
+        threads.add(thread0);
         threads.add(thread1);
         threads.add(thread2);
         threads.add(thread3);
@@ -63,6 +65,6 @@ public class Main {
 
         //printing transaction log
         System.out.println("Transaction Log: ");
-        system.getTransactionLog().forEach(System.out::println);
+        bankingSystem.getTransactionLog().forEach(System.out::println);
     }
 }
