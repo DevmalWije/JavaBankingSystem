@@ -35,7 +35,7 @@ public class Main {
         Thread thread6 = new Thread(() -> bankingSystem.transfer(account3,account2, new BigDecimal(200000)));
         //testing deadlock and rollback handling
         Thread thread7 = new Thread(() -> bankingSystem.transfer(account1,account2, new BigDecimal(200)));
-        Thread thread8 = new Thread(() -> bankingSystem.transfer(account2,account1, new BigDecimal(2000)));
+        Thread thread8 = new Thread(() -> bankingSystem.transfer(account1,account1, new BigDecimal(2000)));
 
         threads.add(thread0);
         threads.add(thread1);
